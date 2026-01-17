@@ -1,0 +1,38 @@
+{
+    "name": "sva-chatbot-frontend",
+    "version": "1.0.0",
+    "private": true,
+    "description": "React frontend for SVA-Chatbot system",
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.21.1",
+        "react-dropzone": "^14.2.3",
+        "@monaco-editor/react": "^4.6.0",
+        "axios": "^1.6.5",
+        "recharts": "^2.10.3",
+        "tailwindcss": "^3.4.1",
+        "autoprefixer": "^10.4.16",
+        "postcss": "^8.4.33"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.47",
+        "@types/react-dom": "^18.2.18",
+        "@types/node": "^20.10.6",
+        "@vitejs/plugin-react": "^4.2.1",
+        "typescript": "^5.3.3",
+        "vite": "^5.0.10",
+        "@testing-library/react": "^14.1.2",
+        "@testing-library/jest-dom": "^6.1.5",
+        "@testing-library/user-event": "^14.5.1",
+        "vitest": "^1.1.0",
+        "jsdom": "^23.0.1"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "test": "vitest --run",
+        "test:watch": "vitest"
+    }
+}

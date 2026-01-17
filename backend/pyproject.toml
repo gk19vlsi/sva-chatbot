@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "sva-chatbot-backend"
+version = "1.0.0"
+description = "AI-powered SystemVerilog Assertion generation backend"
+authors = ["SVA-Chatbot Team"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.109.0"
+uvicorn = {extras = ["standard"], version = "^0.27.0"}
+motor = "^3.3.2"
+pydantic = "^2.5.3"
+pydantic-settings = "^2.1.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.6"
+aiohttp = "^3.9.1"
+pymupdf = "^1.23.8"
+python-docx = "^1.1.0"
+markdown = "^3.5.1"
+tree-sitter = "^0.21.0"
+websockets = "^12.0"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+httpx = "^0.26.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,51 @@
+ALU (Arithmetic Logic Unit) Specification
+
+1. Overview
+The ALU module performs arithmetic and logical operations on 4-bit inputs.
+
+2. Interface
+- Inputs:
+  * clk: Clock signal
+  * reset_n: Active-low asynchronous reset
+  * a[3:0]: First 4-bit operand
+  * b[3:0]: Second 4-bit operand
+  * op[2:0]: 3-bit operation selector
+  
+- Outputs:
+  * result[3:0]: 4-bit operation result
+
+3. Operations
+The ALU supports the following operations based on the op signal:
+- op = 3'b000: Addition (a + b)
+- op = 3'b001: Subtraction (a - b)
+- op = 3'b010: Bitwise NOT of a (~a)
+- op = 3'b011: Bitwise NAND (a NAND b)
+- op = 3'b100: Bitwise NOR (a NOR b)
+- op = 3'b101: Bitwise AND (a AND b)
+- op = 3'b110: Bitwise OR (a OR b)
+- op = 3'b111: Bitwise XOR (a XOR b)
+
+4. Functional Requirements
+4.1 Reset Behavior
+- When reset_n is low, the result shall be set to 4'b0000
+- Reset shall be asynchronous
+
+4.2 Operation Execution
+- All operations shall be executed on the positive edge of the clock
+- The result shall be registered (stored in a flip-flop)
+- Invalid operation codes shall result in 4'bxxxx
+
+4.3 Timing
+- All operations shall complete within one clock cycle
+- The result shall be available on the next clock cycle after the operation is selected
+
+5. Assertions to Verify
+5.1 Reset assertion: result must be 0 when reset_n is low
+5.2 Addition assertion: result must equal a + b when op is 3'b000
+5.3 Subtraction assertion: result must equal a - b when op is 3'b001
+5.4 NOT assertion: result must equal ~a when op is 3'b010
+5.5 NAND assertion: result must equal ~(a & b) when op is 3'b011
+5.6 NOR assertion: result must equal ~(a | b) when op is 3'b100
+5.7 AND assertion: result must equal a & b when op is 3'b101
+5.8 OR assertion: result must equal a | b when op is 3'b110
+5.9 XOR assertion: result must equal a ^ b when op is 3'b111
