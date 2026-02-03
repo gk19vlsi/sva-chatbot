@@ -8,7 +8,7 @@ Uses advanced prompt engineering with confidence scoring and ambiguity detection
 from typing import List, Dict, Any, Optional
 from app.agents.base import Agent, PipelineContext, AgentResult
 from app.agents.prompt_templates import AlignmentPrompts
-from app.clients.groq_client import GroqClient
+from app.clients.base import LLMClient
 from bson import ObjectId
 from datetime import datetime
 import json
@@ -29,8 +29,8 @@ class AlignmentAgent(Agent):
     - Store alignment data for traceability
     """
     
-    def __init__(self, groq_client: GroqClient, db):
-        super().__init__("Alignment", groq_client, db)
+    def __init__(self, llm_client: LLMClient, db):
+        super().__init__("Alignment", llm_client, db)
     
     async def execute(self, context: PipelineContext) -> AgentResult:
         """

@@ -421,9 +421,8 @@ async def generate_assertions(
     )
     
     try:
-        # Import orchestrator and client
+        # Import orchestrator and utilities
         from ..agents.orchestrator import Orchestrator
-        from ..clients.groq_client import GroqClient
         from ..utils.text_extraction import extract_text
         
         # Load specification file contents
@@ -482,11 +481,9 @@ async def generate_assertions(
             "rtl_design_id": str(rtl_designs[0]["_id"]) if rtl_designs else None
         }
         
-        # Create Groq client instance
-        groq_client = GroqClient()
-        
         # Create orchestrator instance with required dependencies
-        orchestrator = Orchestrator(groq_client=groq_client, db=db)
+        # The orchestrator will create the appropriate LLM client via factory
+        orchestrator = Orchestrator(db=db)
         
         # Execute generation pipeline with initial data
         result = await orchestrator.execute_pipeline(project_id, initial_data=initial_data)

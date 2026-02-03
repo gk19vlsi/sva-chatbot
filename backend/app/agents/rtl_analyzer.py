@@ -8,7 +8,7 @@ Uses advanced prompt engineering with structured output and few-shot examples.
 from typing import List, Dict, Any
 from app.agents.base import Agent, PipelineContext, AgentResult
 from app.agents.prompt_templates import RTLAnalyzerPrompts
-from app.clients.groq_client import GroqClient
+from app.clients.base import LLMClient
 from app.utils.sv_parser import SystemVerilogParser, detect_clocks_and_resets
 from bson import ObjectId
 from datetime import datetime
@@ -30,8 +30,8 @@ class RTLAnalyzerAgent(Agent):
     - Recognize common protocol patterns (handshake, FIFO, etc.)
     """
     
-    def __init__(self, groq_client: GroqClient, db):
-        super().__init__("RTLAnalyzer", groq_client, db)
+    def __init__(self, llm_client: LLMClient, db):
+        super().__init__("RTLAnalyzer", llm_client, db)
         self.parser = SystemVerilogParser()
     
     async def execute(self, context: PipelineContext) -> AgentResult:

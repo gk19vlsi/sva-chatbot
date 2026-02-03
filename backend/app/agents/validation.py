@@ -8,7 +8,7 @@ Uses advanced prompt engineering with detailed quality assessment.
 from typing import List, Dict, Any
 from app.agents.base import Agent, PipelineContext, AgentResult
 from app.agents.prompt_templates import ValidationPrompts
-from app.clients.groq_client import GroqClient
+from app.clients.base import LLMClient
 from app.utils.sva_validator import validate_sva_syntax
 from bson import ObjectId
 from datetime import datetime
@@ -30,8 +30,8 @@ class ValidationAgent(Agent):
     - Update assertion metadata with validation results
     """
     
-    def __init__(self, groq_client: GroqClient, db):
-        super().__init__("Validation", groq_client, db)
+    def __init__(self, llm_client: LLMClient, db):
+        super().__init__("Validation", llm_client, db)
     
     async def execute(self, context: PipelineContext) -> AgentResult:
         """

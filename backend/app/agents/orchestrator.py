@@ -18,7 +18,7 @@ from app.agents.rtl_analyzer import RTLAnalyzerAgent
 from app.agents.alignment import AlignmentAgent
 from app.agents.sva_generator import SVAGeneratorAgent
 from app.agents.validation import ValidationAgent
-from app.clients.groq_client import GroqClient
+from app.clients.factory import LLMClientFactory
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.config import settings
 
@@ -78,26 +78,31 @@ class Orchestrator:
     Validates: Requirements 16.1, 16.2, 16.3, 16.4, 16.5
     """
     
-    def __init__(self, groq_client: GroqClient, db: AsyncIOMotorDatabase):
+    def __init__(self, db: AsyncIOMotorDatabase):
         """
         Initialize orchestrator and all agents
         
         Args:
-            groq_client: Groq API client for LLM interactions
             db: MongoDB database instance
             
-        Validates: Requirement 16.1
+        Validates: Requirement 16.1, 5.1, 5.4, 9.4
         """
-        self.groq_client = groq_client
         self.db = db
         
-        # Initialize all five agents in sequence
+        # Create LLM client using factory
+        self.llm_client = LLMClientFactory.create_client()
+        provider_name = LLMClientFactory.get_provider_name()
+        
+        # Log which provider is being used at startup
+        logger.info(f"Orchestrator initializing with LLM provider: {provider_name}")
+        
+        # Initialize all five agents in sequence with factory-created client
         self.agents: Dict[str, Agent] = {
-            "spec_parser": SpecificationParserAgent(groq_client, db),
-            "rtl_analyzer": RTLAnalyzerAgent(groq_client, db),
-            "alignment": AlignmentAgent(groq_client, db),
-            "sva_generator": SVAGeneratorAgent(groq_client, db),
-            "validation": ValidationAgent(groq_client, db)
+            "spec_parser": SpecificationParserAgent(self.llm_client, db),
+            "rtl_analyzer": RTLAnalyzerAgent(self.llm_client, db),
+            "alignment": AlignmentAgent(self.llm_client, db),
+            "sva_generator": SVAGeneratorAgent(self.llm_client, db),
+            "validation": ValidationAgent(self.llm_client, db)
         }
         
         # Define pipeline execution order
@@ -109,7 +114,7 @@ class Orchestrator:
             "validation"
         ]
         
-        logger.info("Orchestrator initialized with 5 agents")
+        logger.info(f"Orchestrator initialized with 5 agents using {provider_name} provider")
     
     async def execute_pipeline(
         self,

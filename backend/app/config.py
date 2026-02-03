@@ -10,13 +10,21 @@ class Settings(BaseSettings):
     mongodb_url: str = "mongodb://localhost:27017"
     mongodb_db_name: str = "sva_chatbot"
     
+    # LLM Provider Selection
+    llm_provider: str = "groq"  # "groq" or "openai"
+    
     # Groq API Configuration
-    groq_api_key: str
+    groq_api_key: str = ""
     groq_primary_model: str = "llama-3.3-70b-versatile"
     groq_fallback_model: str = "llama-3.1-8b-instant"  # Updated to a supported model
     
+    # OpenAI API Configuration
+    openai_api_key: str = ""
+    openai_primary_model: str = "gpt-4o"
+    openai_fallback_model: str = "gpt-4o-mini"
+    
     # JWT Configuration
-    jwt_secret_key: str
+    jwt_secret_key: str = ""
     jwt_algorithm: str = "HS256"
     jwt_expiration_minutes: int = 60
     

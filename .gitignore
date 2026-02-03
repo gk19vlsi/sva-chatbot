@@ -63,6 +63,7 @@ uploads/
 .coverage
 htmlcov/
 coverage/
+.hypothesis/
 
 # Kiro (keep specs)
 !.kiro/specs/

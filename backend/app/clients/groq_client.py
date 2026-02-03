@@ -145,7 +145,8 @@ class GroqClient:
                         total_tokens=0,
                         duration=duration,
                         success=False,
-                        project_id=project_id
+                        project_id=project_id,
+                        provider="groq"
                     )
                     
                     raise GroqAPIError(error_msg)
@@ -168,7 +169,8 @@ class GroqClient:
                     total_tokens=usage.get("total_tokens", 0),
                     duration=duration,
                     success=True,
-                    project_id=project_id
+                    project_id=project_id,
+                    provider="groq"
                 )
                 
                 # Cache response if enabled

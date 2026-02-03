@@ -8,7 +8,7 @@ Uses advanced prompt engineering with few-shot examples and chain-of-thought rea
 from typing import List, Dict, Any
 from app.agents.base import Agent, PipelineContext, AgentResult
 from app.agents.prompt_templates import SpecificationParserPrompts
-from app.clients.groq_client import GroqClient
+from app.clients.base import LLMClient
 from bson import ObjectId
 from datetime import datetime
 import json
@@ -28,8 +28,8 @@ class SpecificationParserAgent(Agent):
     - Extract entity names (signals, modules, states)
     """
     
-    def __init__(self, groq_client: GroqClient, db):
-        super().__init__("SpecificationParser", groq_client, db)
+    def __init__(self, llm_client: LLMClient, db):
+        super().__init__("SpecificationParser", llm_client, db)
         
         # Temporal keywords to detect
         self.temporal_keywords = [

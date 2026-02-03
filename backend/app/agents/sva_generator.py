@@ -17,7 +17,7 @@ from bson import ObjectId
 
 from app.agents.base import Agent, AgentResult, PipelineContext
 from app.agents.prompt_templates import SVAGeneratorPrompts
-from app.clients.groq_client import GroqClient
+from app.clients.base import LLMClient
 from app.utils.traceability import build_assertion_traceability
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
@@ -34,15 +34,15 @@ class SVAGeneratorAgent(Agent):
     Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.5, 6.6
     """
     
-    def __init__(self, groq_client: GroqClient, db: AsyncIOMotorDatabase):
+    def __init__(self, llm_client: LLMClient, db: AsyncIOMotorDatabase):
         """
         Initialize SVA Generator Agent
         
         Args:
-            groq_client: Groq API client for LLM interactions
+            llm_client: LLM API client for LLM interactions (provider-agnostic)
             db: MongoDB database instance
         """
-        super().__init__(name="SVAGenerator", groq_client=groq_client, db=db)
+        super().__init__(name="SVAGenerator", llm_client=llm_client, db=db)
     
     async def execute(self, context: PipelineContext) -> AgentResult:
         """

@@ -13,7 +13,7 @@ import logging
 import asyncio
 from pydantic import BaseModel
 
-from app.clients.groq_client import GroqClient, GroqAPIError
+from app.clients.base import LLMClient, LLMAPIError
 from app.utils.structured_logging import log_agent_execution, log_error
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.config import settings
@@ -53,17 +53,17 @@ class Agent(ABC):
     Validates: Requirements 16.1, 16.3
     """
     
-    def __init__(self, name: str, groq_client: GroqClient, db: AsyncIOMotorDatabase):
+    def __init__(self, name: str, llm_client: LLMClient, db: AsyncIOMotorDatabase):
         """
         Initialize agent
         
         Args:
             name: Agent name for logging and identification
-            groq_client: Groq API client for LLM interactions
+            llm_client: LLM API client for LLM interactions (provider-agnostic)
             db: MongoDB database instance
         """
         self.name = name
-        self.groq_client = groq_client
+        self.llm_client = llm_client
         self.db = db
         self.logger = logging.getLogger(f"{__name__}.{name}")
     
@@ -112,7 +112,7 @@ class Agent(ABC):
             Generated text response from LLM
             
         Raises:
-            GroqAPIError: If all retry attempts fail
+            LLMAPIError: If all retry attempts fail
             
         Validates: Requirements 16.3, 17.1, 17.2
         """
@@ -127,7 +127,7 @@ class Agent(ABC):
         for attempt in range(max_retries):
             try:
                 self.logger.info(
-                    f"Groq API call attempt {attempt + 1}/{max_retries} "
+                    f"LLM API call attempt {attempt + 1}/{max_retries} "
                     f"for agent {self.name}"
                 )
                 
@@ -138,7 +138,7 @@ class Agent(ABC):
                     await asyncio.sleep(delay)
                 
                 # Use fallback method which tries primary then fallback model
-                response = await self.groq_client.chat_completion_with_fallback(
+                response = await self.llm_client.chat_completion_with_fallback(
                     messages=messages,
                     temperature=temperature,
                     max_tokens=max_tokens,
@@ -150,15 +150,15 @@ class Agent(ABC):
                 content = response["choices"][0]["message"]["content"]
                 
                 self.logger.info(
-                    f"Groq API call succeeded for agent {self.name} "
+                    f"LLM API call succeeded for agent {self.name} "
                     f"(attempt {attempt + 1})"
                 )
                 
                 return content
                 
-            except GroqAPIError as e:
+            except LLMAPIError as e:
                 self.logger.warning(
-                    f"Groq API call failed for agent {self.name} "
+                    f"LLM API call failed for agent {self.name} "
                     f"(attempt {attempt + 1}/{max_retries}): {str(e)}"
                 )
                 
@@ -175,7 +175,7 @@ class Agent(ABC):
                 await asyncio.sleep(delay)
         
         # This should never be reached due to the raise in the loop
-        raise GroqAPIError("Unexpected error in retry logic")
+        raise LLMAPIError("Unexpected error in retry logic", provider="unknown")
     
     async def _log_execution(
         self,
