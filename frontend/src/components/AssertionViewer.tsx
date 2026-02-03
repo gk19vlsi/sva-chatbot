@@ -13,6 +13,7 @@ export interface Assertion {
   confidenceScore: number;
   qualityScore?: number;
   explanation: string;
+  displayName?: string; // Optional display name like "Assertion 1"
   traceability?: {
     requirementText: string;
     rtlSignals: string[];
@@ -234,7 +235,7 @@ const AssertionViewer: React.FC<AssertionViewerProps> = ({
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-3">
             <h3 className="text-lg font-semibold text-gray-900">
-              Assertion {assertion.id}
+              {assertion.displayName || `Assertion ${assertion.id}`}
             </h3>
             <span
               className={`px-2 py-1 rounded text-xs font-medium ${getTypeBadgeColor(

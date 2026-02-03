@@ -556,6 +556,9 @@ async def generate_assertions(
             "message": f"Successfully generated {len(assertions_response)} assertions"
         }
         
+    except HTTPException:
+        # Re-raise HTTPException without modification (preserves status code)
+        raise
     except Exception as e:
         # Update project status to error
         await db.projects.update_one(

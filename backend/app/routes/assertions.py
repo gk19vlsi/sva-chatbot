@@ -189,7 +189,7 @@ async def get_project_assertions(
     for assertion in assertions:
         assertions_list.append({
             "id": str(assertion["_id"]),
-            "code": assertion["code"],
+            "code": assertion.get("code", assertion.get("assertion_code", "")),
             "type": assertion.get("type", "unknown"),
             "category": assertion.get("category", "unknown"),
             "confidence_score": assertion.get("confidence_score", 0.0),

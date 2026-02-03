@@ -33,7 +33,7 @@ const Assertions: React.FC = () => {
       const response = await api.get(`/api/assertions/project/${projectId}`);
       
       // Transform backend data to frontend format
-      const transformedAssertions: Assertion[] = response.data.assertions.map((item: any) => ({
+      const transformedAssertions: Assertion[] = response.data.assertions.map((item: any, index: number) => ({
         id: item.id || item._id,
         code: item.code,
         type: item.type,
@@ -41,6 +41,7 @@ const Assertions: React.FC = () => {
         confidenceScore: item.confidence_score,
         qualityScore: item.quality_score,
         explanation: item.explanation,
+        displayName: `Assertion ${index + 1}`, // Add user-friendly display name
         traceability: item.traceability ? {
           requirementText: item.traceability.requirement_text,
           rtlSignals: item.traceability.rtl_signals || [],
@@ -141,7 +142,7 @@ const Assertions: React.FC = () => {
                 Assertions ({assertions.length})
               </h2>
               <div className="space-y-2">
-                {assertions.map((assertion) => (
+                {assertions.map((assertion, index) => (
                   <button
                     key={assertion.id}
                     onClick={() => setSelectedAssertion(assertion)}
@@ -156,7 +157,7 @@ const Assertions: React.FC = () => {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium text-gray-900">
-                        {assertion.id}
+                        Assertion {index + 1}
                       </span>
                       <span className="text-xs text-gray-500">
                         {assertion.type}
